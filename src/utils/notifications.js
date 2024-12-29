@@ -1,54 +1,68 @@
 import nodemailer from 'nodemailer';
 
-class NotificationSystem {
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: true,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   }
+});
 
-  async sendLeadNotification(leadData) {
-    const html = `
-      <h2>New Lead Notification</h2>
-      <p><strong>Name:</strong> ${leadData.name}</p>
-      <p><strong>Phone:</strong> ${leadData.phone}</p>
-      <p><strong>Address:</strong> ${leadData.address}</p>
-      <p><strong>City:</strong> ${leadData.city}</p>
-      <p><strong>Source:</strong> ${leadData.source}</p>
-    `;
+export async function sendLeadNotification(lead) {
+  const emailContent = `
+    New Lead Received!
+    
+    Name: ${lead.name}
+    Phone: ${lead.phone}
+    Address: ${lead.address}
+    City: ${lead.city}
+    Source: ${lead.source}
+    Timestamp: ${new Date().toLocaleString()}
+  `;
 
-    await this.transporter.sendMail({
+  try {
+    await transporter.sendMail({
       from: process.env.NOTIFICATION_FROM,
       to: process.env.NOTIFICATION_TO,
-      subject: `New Lead: ${leadData.name} - ${leadData.city}`,
-      html
+      subject: `New Lead: ${lead.city} - ${lead.name}`,
+      text: emailContent,
+      html: emailContent.replace(/\n/g, '<br>')
     });
-  }
 
-  async sendDailyReport(metrics) {
-    const html = `
-      <h2>Daily Performance Report</h2>
-      <h3>Overview</h3>
-      <ul>
-        <li>Total Leads: ${metrics.totalLeads}</li>
-        <li>Conversion Rate: ${metrics.conversionRate}%</li>
-        <li>Top Performing City: ${metrics.topCity}</li>
-      </ul>
-    `;
-
-    await this.transporter.sendMail({
-      from: process.env.NOTIFICATION_FROM,
-      to: process.env.NOTIFICATION_TO,
-      subject: 'Daily Performance Report',
-      html
-    });
+    console.log('Lead notification sent successfully');
+  } catch (error) {
+    console.error('Error sending lead notification:', error);
   }
 }
 
-export const notifier = new NotificationSystem();
+export async function sendDailyReport(metrics) {
+  const reportContent = `
+    Daily Performance Report
+    
+    Total Leads Today: ${metrics.dailyLeads}
+    Conversion Rate: ${metrics.conversionRate}%
+    Average Response Time: ${metrics.avgResponseTime}min
+    
+    Top Performing Cities:
+    ${metrics.topCities.map(city => `${city.name}: ${city.leads} leads`).join('\n')}
+    
+    Recent Activity:
+    ${metrics.recentActivity.map(activity => `- ${activity.description}`).join('\n')}
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.NOTIFICATION_FROM,
+      to: process.env.REPORT_RECIPIENTS,
+      subject: `Daily Performance Report - ${new Date().toLocaleDateString()}`,
+      text: reportContent,
+      html: reportContent.replace(/\n/g, '<br>')
+    });
+
+    console.log('Daily report sent successfully');
+  } catch (error) {
+    console.error('Error sending daily report:', error);
+  }
+}
