@@ -1,0 +1,39 @@
+{
+  "cities": [
+    {
+      "name": "Dallas",
+      "state": "TX",
+      "neighborhoods": ["Downtown", "Uptown", "Oak Lawn", "Deep Ellum"],
+      "averagePrice": 425000,
+      "daysOnMarket": 35
+    },
+    {
+      "name": "Fort Worth",
+      "state": "TX",
+      "neighborhoods": ["Downtown", "Cultural District", "Stockyards"],
+      "averagePrice": 385000,
+      "daysOnMarket": 32
+    },
+    {
+      "name": "Austin",
+      "state": "TX",
+      "neighborhoods": ["Downtown", "South Congress", "East Austin"],
+      "averagePrice": 565000,
+      "daysOnMarket": 28
+    },
+    {
+      "name": "Houston",
+      "state": "TX",
+      "neighborhoods": ["Downtown", "Montrose", "Heights"],
+      "averagePrice": 395000,
+      "daysOnMarket": 38
+    },
+    {
+      "name": "San Antonio",
+      "state": "TX",
+      "neighborhoods": ["Downtown", "Alamo Heights", "Pearl District"],
+      "averagePrice": 335000,
+      "daysOnMarket": 42
+    }
+  ]
+}
