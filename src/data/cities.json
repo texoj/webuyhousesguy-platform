@@ -3,30 +3,38 @@
     {
       "name": "Dallas",
       "state": "TX",
-      "coordinates": {
-        "lat": 32.7767,
-        "lng": -96.7970
-      },
-      "neighborhoods": [
-        "Downtown",
-        "Uptown",
-        "Oak Lawn",
-        "Deep Ellum"
-      ]
+      "coordinates": {"lat": 32.7767, "lng": -96.7970},
+      "neighborhoods": ["Downtown", "Uptown", "Oak Lawn", "Deep Ellum"]
     },
     {
       "name": "Fort Worth",
       "state": "TX",
-      "coordinates": {
-        "lat": 32.7555,
-        "lng": -97.3308
-      },
-      "neighborhoods": [
-        "Downtown",
-        "Cultural District",
-        "Stockyards",
-        "West 7th"
-      ]
+      "coordinates": {"lat": 32.7555, "lng": -97.3308},
+      "neighborhoods": ["Downtown", "Cultural District", "Stockyards"]
+    },
+    {
+      "name": "Houston",
+      "state": "TX",
+      "coordinates": {"lat": 29.7604, "lng": -95.3698},
+      "neighborhoods": ["Downtown", "Midtown", "Heights", "Montrose"]
+    },
+    {
+      "name": "San Antonio",
+      "state": "TX",
+      "coordinates": {"lat": 29.4241, "lng": -98.4936},
+      "neighborhoods": ["Downtown", "Alamo Heights", "Pearl District"]
+    },
+    {
+      "name": "Austin",
+      "state": "TX",
+      "coordinates": {"lat": 30.2672, "lng": -97.7431},
+      "neighborhoods": ["Downtown", "South Congress", "East Austin"]
+    },
+    {
+      "name": "Phoenix",
+      "state": "AZ",
+      "coordinates": {"lat": 33.4484, "lng": -112.0740},
+      "neighborhoods": ["Downtown", "Scottsdale", "Tempe"]
     }
   ]
 }
