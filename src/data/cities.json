@@ -1,0 +1,32 @@
+{
+  "cities": [
+    {
+      "name": "Dallas",
+      "state": "TX",
+      "coordinates": {
+        "lat": 32.7767,
+        "lng": -96.7970
+      },
+      "neighborhoods": [
+        "Downtown",
+        "Uptown",
+        "Oak Lawn",
+        "Deep Ellum"
+      ]
+    },
+    {
+      "name": "Fort Worth",
+      "state": "TX",
+      "coordinates": {
+        "lat": 32.7555,
+        "lng": -97.3308
+      },
+      "neighborhoods": [
+        "Downtown",
+        "Cultural District",
+        "Stockyards",
+        "West 7th"
+      ]
+    }
+  ]
+}
