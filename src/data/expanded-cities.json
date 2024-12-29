@@ -1,0 +1,46 @@
+{
+  "cities": [
+    {
+      "name": "Dallas",
+      "state": "TX",
+      "coordinates": {"lat": 32.7767, "lng": -96.7970},
+      "neighborhoods": ["Downtown", "Uptown", "Oak Lawn", "Deep Ellum"]
+    },
+    {
+      "name": "Fort Worth",
+      "state": "TX",
+      "coordinates": {"lat": 32.7555, "lng": -97.3308},
+      "neighborhoods": ["Downtown", "Cultural District", "Stockyards"]
+    },
+    {
+      "name": "Austin",
+      "state": "TX",
+      "coordinates": {"lat": 30.2672, "lng": -97.7431},
+      "neighborhoods": ["Downtown", "South Congress", "East Austin"]
+    },
+    {
+      "name": "Houston",
+      "state": "TX",
+      "coordinates": {"lat": 29.7604, "lng": -95.3698},
+      "neighborhoods": ["Downtown", "Montrose", "Heights"]
+    },
+    {
+      "name": "San Antonio",
+      "state": "TX",
+      "coordinates": {"lat": 29.4241, "lng": -98.4936},
+      "neighborhoods": ["Downtown", "Alamo Heights", "Pearl District"]
+    },
+    {
+      "name": "Phoenix",
+      "state": "AZ",
+      "coordinates": {"lat": 33.4484, "lng": -112.0740},
+      "neighborhoods": ["Downtown", "Scottsdale", "Tempe"]
+    },
+    {
+      "name": "Las Vegas",
+      "state": "NV",
+      "coordinates": {"lat": 36.1699, "lng": -115.1398},
+      "neighborhoods": ["The Strip", "Downtown", "Summerlin"]
+    }
+  ]
+}
