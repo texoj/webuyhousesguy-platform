@@ -1,60 +1,20 @@
-import { getServerSession } from 'next-auth/next';
-import { prisma } from '@/lib/prisma';
+import { leadTracker } from '../../utils/leadTracking';
 
 export default async function handler(req, res) {
-  const session = await getServerSession(req, res);
-
-  if (!session) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
   }
 
   try {
-    // Get total leads
-    const totalLeads = await prisma.lead.count();
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30); // Last 30 days
 
-    // Get conversion rate
-    const convertedLeads = await prisma.lead.count({
-      where: { status: 'converted' }
-    });
-    const conversionRate = (convertedLeads / totalLeads * 100).toFixed(1);
+    const metrics = leadTracker.getAnalytics(startDate, endDate);
 
-    // Get average response time
-    const leads = await prisma.lead.findMany({
-      select: {
-        createdAt: true,
-        firstResponseAt: true
-      },
-      where: {
-        firstResponseAt: { not: null }
-      }
-    });
-    
-    const avgResponseTime = leads.reduce((acc, lead) => {
-      const diff = lead.firstResponseAt - lead.createdAt;
-      return acc + diff;
-    }, 0) / leads.length;
-
-    // Get leads by city
-    const leadsByCity = await prisma.lead.groupBy({
-      by: ['city'],
-      _count: true
-    });
-
-    // Get recent activity
-    const recentActivity = await prisma.activity.findMany({
-      take: 10,
-      orderBy: { createdAt: 'desc' }
-    });
-
-    res.json({
-      totalLeads,
-      conversionRate,
-      avgResponseTime,
-      leadsByCity,
-      recentActivity
-    });
+    return res.status(200).json(metrics);
   } catch (error) {
     console.error('Error fetching metrics:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }

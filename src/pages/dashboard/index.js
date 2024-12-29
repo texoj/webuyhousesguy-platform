@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, BarChart } from 'recharts';
-import { useAuth } from '@/utils/auth';
+import React, { useEffect, useState } from 'react';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
 
 export default function Dashboard() {
-  const [metrics, setMetrics] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const [metrics, setMetrics] = useState({
+    leads: [],
+    conversions: [],
+    performance: {}
+  });
 
   useEffect(() => {
     fetchMetrics();
+    const interval = setInterval(fetchMetrics, 300000); // Refresh every 5 minutes
+    return () => clearInterval(interval);
   }, []);
 
   const fetchMetrics = async () => {
@@ -18,58 +30,94 @@ export default function Dashboard() {
       setMetrics(data);
     } catch (error) {
       console.error('Error fetching metrics:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-8">Performance Dashboard</h1>
-      
-      {/* Lead Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold">Total Leads</h3>
-          <p className="text-3xl font-bold">{metrics.totalLeads}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold">Conversion Rate</h3>
-          <p className="text-3xl font-bold">{metrics.conversionRate}%</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold">Average Response Time</h3>
-          <p className="text-3xl font-bold">{metrics.avgResponseTime}min</p>
-        </div>
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Leads by City</h3>
-          <BarChart data={metrics.leadsByCity} />
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Lead Trends</h3>
-          <LineChart data={metrics.leadTrends} />
-        </div>
-      </div>
-
-      {/* Recent Activity */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-        <div className="space-y-4">
-          {metrics.recentActivity.map((activity, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">{activity.type}</p>
-                <p className="text-sm text-gray-500">{activity.description}</p>
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          <h1 className="text-3xl font-bold text-gray-900">Performance Dashboard</h1>
+          
+          {/* Overview Cards */}
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500 truncate">
+                  Total Leads
+                </dt>
+                <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                  {metrics.performance.totalLeads || 0}
+                </dd>
               </div>
-              <span className="text-sm text-gray-500">{activity.time}</span>
             </div>
-          ))}
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500 truncate">
+                  Conversion Rate
+                </dt>
+                <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                  {(metrics.performance.conversionRate || 0).toFixed(1)}%
+                </dd>
+              </div>
+            </div>
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500 truncate">
+                  Active Cities
+                </dt>
+                <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                  {metrics.performance.activeCities || 0}
+                </dd>
+              </div>
+            </div>
+          </div>
+
+          {/* Lead Trend Chart */}
+          <div className="mt-8 bg-white shadow rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900">Lead Trends</h2>
+            <div className="mt-4" style={{ height: 400 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={metrics.leads}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="count" 
+                    stroke="#3B82F6" 
+                    strokeWidth={2} 
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* City Performance */}
+          <div className="mt-8 bg-white shadow rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900">City Performance</h2>
+            <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {Object.entries(metrics.performance.byCity || {}).map(([city, data]) => (
+                <div key={city} className="border rounded-lg p-4">
+                  <h3 className="font-medium text-gray-900">{city}</h3>
+                  <dl className="mt-2 grid grid-cols-2 gap-4">
+                    <div>
+                      <dt className="text-sm text-gray-500">Leads</dt>
+                      <dd className="text-lg font-medium">{data.leads}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm text-gray-500">Conversion Rate</dt>
+                      <dd className="text-lg font-medium">
+                        {data.conversionRate.toFixed(1)}%
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
